@@ -22,7 +22,7 @@ export const AuthProvider = ({ children }) => {
   const login = (username, password) => {
     // Bu kısımda normalde bir API çağrısı yapılır
     // Şimdilik sadece basit bir kontrol yapıyoruz
-    if (username === "admin" && password === "password") {
+    if (username === "superadmin" && password === "9999") {
       setUser({ username });
       return true;
     }
