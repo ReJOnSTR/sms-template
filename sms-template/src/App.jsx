@@ -1,5 +1,3 @@
-// src/App.jsx
-import React from "react";
 import {
   BrowserRouter as Router,
   Route,
@@ -7,8 +5,8 @@ import {
   Redirect,
 } from "react-router-dom";
 import { AuthProvider, useAuth } from "./context/AuthContext";
-import Navbar from "./components/Navbar";
-import TemplateList from "./components/TemplateList";
+import Navbar from "./components/navbar";
+import TemplateList from "./components/templateList";
 import Login from "./components/Login";
 
 function PrivateRoute({ component: Component, ...rest }) {

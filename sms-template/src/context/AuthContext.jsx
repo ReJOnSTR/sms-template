@@ -1,13 +1,28 @@
-import { createContext, useState, useContext } from "react";
+// src/context/AuthContext.js
+import { createContext, useState, useContext, useEffect } from "react";
 
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(() => {
+    // localStorage'dan kullanıcı bilgisini oku
+    const savedUser = localStorage.getItem("user");
+    return savedUser ? JSON.parse(savedUser) : null;
+  });
+
+  useEffect(() => {
+    // Kullanıcı bilgisi değiştiğinde localStorage'a kaydet
+    if (user) {
+      localStorage.setItem("user", JSON.stringify(user));
+    } else {
+      localStorage.removeItem("user");
+    }
+  }, [user]);
 
   const login = (username, password) => {
-    // Şimdilik sadece basit bir kontrol yapıyorum.
-    if (username === "superadmin" && password === "9999") {
+    // Bu kısımda normalde bir API çağrısı yapılır
+    // Şimdilik sadece basit bir kontrol yapıyoruz
+    if (username === "admin" && password === "password") {
       setUser({ username });
       return true;
     }
