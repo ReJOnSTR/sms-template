@@ -8,7 +8,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { motion } from "framer-motion";
 
-const API_URL = "http://192.168.1.215:51080";
+const API_URL = "http://192.168.1.215:51080"; // API'nizin tam adresi
 
 function TemplateList() {
   const [templates, setTemplates] = useState([]);
@@ -50,14 +50,11 @@ function TemplateList() {
 
   const fetchSmsHeaders = async () => {
     try {
-      const response = await axios.get(
-        "http://192.168.1.215:51080/api/app/sms-baslik",
-        {
-          headers: {
-            Authorization: `Bearer ${getToken()}`,
-          },
-        }
-      );
+      const response = await axios.get(`${API_URL}/api/app/sms-baslik`, {
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+      });
       setSmsHeaders(response.data.items);
     } catch (error) {
       console.error("SMS başlıkları yüklenirken hata oluştu:", error);
@@ -70,14 +67,11 @@ function TemplateList() {
   const handleDelete = async (id) => {
     if (window.confirm("Bu şablonu silmek istediğinizden emin misiniz?")) {
       try {
-        await axios.delete(
-          `http://192.168.1.215:51080/api/app/sms-sablon/${id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${getToken()}`,
-            },
-          }
-        );
+        await axios.delete(`${API_URL}/api/app/sms-sablon/${id}`, {
+          headers: {
+            Authorization: `Bearer ${getToken()}`,
+          },
+        });
         setTemplates(templates.filter((template) => template.id !== id));
       } catch (error) {
         console.error("Şablon silinirken hata oluştu:", error);
@@ -95,7 +89,7 @@ function TemplateList() {
   const handleUpdate = async (updatedTemplate) => {
     try {
       await axios.put(
-        `http://192.168.1.215:51080/api/app/sms-sablon/${updatedTemplate.id}`,
+        `${API_URL}/api/app/sms-sablon/${updatedTemplate.id}`,
         updatedTemplate,
         {
           headers: {
@@ -120,7 +114,7 @@ function TemplateList() {
   const handleCreate = async (template) => {
     try {
       const response = await axios.post(
-        "http://192.168.1.215:51080/api/app/sms-sablon",
+        `${API_URL}/api/app/sms-sablon`,
         template,
         {
           headers: {
@@ -458,7 +452,7 @@ function HeaderList({ smsHeaders, setSmsHeaders, fetchSmsHeaders, getToken }) {
 
     try {
       const response = await axios.post(
-        "http://192.168.1.215:51080/api/app/sms-baslik",
+        `${API_URL}/api/app/sms-baslik`,
         { ad: newHeader },
         {
           headers: {
@@ -478,14 +472,11 @@ function HeaderList({ smsHeaders, setSmsHeaders, fetchSmsHeaders, getToken }) {
       window.confirm("Bu SMS başlığını silmek istediğinizden emin misiniz?")
     ) {
       try {
-        await axios.delete(
-          `http://192.168.1.215:51080/api/app/sms-baslik/${id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${getToken()}`,
-            },
-          }
-        );
+        await axios.delete(`${API_URL}/api/app/sms-baslik/${id}`, {
+          headers: {
+            Authorization: `Bearer ${getToken()}`,
+          },
+        });
         setSmsHeaders(smsHeaders.filter((header) => header.id !== id));
       } catch (error) {
         console.error("SMS başlığı silinirken hata oluştu:", error);
@@ -503,7 +494,7 @@ function HeaderList({ smsHeaders, setSmsHeaders, fetchSmsHeaders, getToken }) {
 
     try {
       await axios.put(
-        `http://192.168.1.215:51080/api/app/sms-baslik/${editingHeaderId}`,
+        `${API_URL}/api/app/sms-baslik/${editingHeaderId}`,
         { ad: editedHeaderName },
         {
           headers: {
