@@ -1,77 +1,56 @@
-import { useState, useEffect } from "react";
+// src/App.jsx
+import React from "react";
 import {
   BrowserRouter as Router,
   Route,
   Switch,
   Redirect,
 } from "react-router-dom";
-import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "./firebase";
-import Navbar from "./components/navbar";
-import TemplateList from "./components/templateList";
-import TemplateForm from "./components/templateForm";
+import { AuthProvider, useAuth } from "./context/AuthContext";
+import Navbar from "./components/Navbar";
+import TemplateList from "./components/TemplateList";
 import Login from "./components/Login";
 
-function PrivateRoute({ component: Component, currentUser, ...rest }) {
+function PrivateRoute({ component: Component, ...rest }) {
+  const { user } = useAuth();
   return (
     <Route
       {...rest}
       render={(props) =>
-        currentUser ? <Component {...props} /> : <Redirect to="/login" />
+        user ? <Component {...props} /> : <Redirect to="/login" />
       }
     />
   );
 }
 
-function App() {
-  const [currentUser, setCurrentUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setCurrentUser(user);
-      setLoading(false);
-    });
-
-    return unsubscribe;
-  }, []);
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+function AppContent() {
+  const { user } = useAuth();
 
   return (
     <Router>
       <div className="min-h-screen bg-gray-100">
-        <Navbar currentUser={currentUser} />
+        <Navbar />
         <main className="container mx-auto px-4 py-8">
           <Switch>
             <Route
               path="/login"
               render={(props) =>
-                currentUser ? <Redirect to="/" /> : <Login {...props} />
+                user ? <Redirect to="/" /> : <Login {...props} />
               }
             />
-            <PrivateRoute
-              exact
-              path="/"
-              component={TemplateList}
-              currentUser={currentUser}
-            />
-            <PrivateRoute
-              path="/add"
-              component={TemplateForm}
-              currentUser={currentUser}
-            />
-            <PrivateRoute
-              path="/edit/:id"
-              component={TemplateForm}
-              currentUser={currentUser}
-            />
+            <PrivateRoute exact path="/" component={TemplateList} />
           </Switch>
         </main>
       </div>
     </Router>
+  );
+}
+
+function App() {
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
   );
 }
 
